@@ -87,7 +87,7 @@ export function ProductsView() {
   return (
     <DashboardContent>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        Faça seu pedido!
       </Typography>
 
       <CartIcon totalItems={8} />
@@ -121,10 +121,9 @@ export function ProductsView() {
             sortBy={sortBy}
             onSort={handleSort}
             options={[
-              { value: 'featured', label: 'Featured' },
-              { value: 'newest', label: 'Newest' },
-              { value: 'priceDesc', label: 'Price: High-Low' },
-              { value: 'priceAsc', label: 'Price: Low-High' },
+              { value: 'newest', label: 'Mais novo' },
+              { value: 'priceDesc', label: 'Preço: Mais baixo' },
+              { value: 'priceAsc', label: 'Preço: Mais alto' },
             ]}
           />
         </Box>

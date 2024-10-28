@@ -10,9 +10,10 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`Produtos - ${CONFIG.appName}`}</title>
+        <title> {`Empresa - ${CONFIG.appName}`}</title>
       </Helmet>
 
+      <h1>Empresa</h1>
       <ProductsView />
     </>
   );

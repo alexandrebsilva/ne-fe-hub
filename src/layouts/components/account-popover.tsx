@@ -129,8 +129,19 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth color="error" size="medium" variant="text">
-            Logout
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('user');
+              router.push('/sign-in');
+            }}
+            fullWidth
+            color="error"
+            size="medium"
+            variant="text"
+          >
+            Sair
           </Button>
         </Box>
       </Popover>

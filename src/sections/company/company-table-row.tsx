@@ -15,23 +15,31 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export type UserProps = {
-  id: string;
+type LocationDetails = {
+  shoppingMallName: string;
+  floor: string;
+  room: string;
+};
+
+export type CompanyProps = {
+  uuid: string;
+  createdAt: string;
+  updatedAt: string;
   name: string;
-  role: string;
-  status: string;
-  company: string;
-  avatarUrl: string;
-  isVerified: boolean;
+  legalName: string;
+  document: string;
+  isOwnCompany: boolean;
+  locationDetails: LocationDetails;
+  isActive: boolean;
 };
 
 type UserTableRowProps = {
-  row: UserProps;
+  row: CompanyProps;
   selected: boolean;
   onSelectRow: () => void;
 };
 
-export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function CompanyTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -51,17 +59,17 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.name} src={row.avatarUrl} />
+            <Avatar alt={row.name} src="TODO" />
             {row.name}
           </Box>
         </TableCell>
 
-        <TableCell>{row.company}</TableCell>
+        <TableCell>{row.legalName}</TableCell>
 
-        <TableCell>{row.role}</TableCell>
+        <TableCell>{row.document}</TableCell>
 
         <TableCell align="center">
-          {row.isVerified ? (
+          {row.isActive ? (
             <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
           ) : (
             '-'
@@ -69,7 +77,9 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </TableCell>
 
         <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
+          <Label color={(!row.isOwnCompany && 'success') || 'default'}>
+            {row.isOwnCompany ? 'Própria' : 'Convênio'}
+          </Label>
         </TableCell>
 
         <TableCell align="right">

@@ -1,5 +1,3 @@
-import type { AxiosError, AxiosResponse } from 'axios';
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios';
 
@@ -8,7 +6,7 @@ export interface SignInProps {
   password: string;
 }
 
-export default async function signIn({ identifier, password }: SignInProps): Promise<any> {
+export async function signIn({ identifier, password }: SignInProps): Promise<any> {
   console.log('Singinin....');
 
   const responseSignIn = await axios.post('http://localhost:3000/auth/signin', {

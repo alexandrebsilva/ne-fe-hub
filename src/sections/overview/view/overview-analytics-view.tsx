@@ -1,4 +1,7 @@
-import getLoggedUserFromLocalStorage from 'src/sections/auth/helpers/get-logged-user';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
@@ -6,6 +9,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { _tasks, _posts, _timeline } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+
+import getLoggedUserFromLocalStorage from 'src/sections/auth/helpers/get-logged-user';
 
 import { AnalyticsNews } from '../analytics-news';
 import { AnalyticsTasks } from '../analytics-tasks';
@@ -24,11 +29,40 @@ export function OverviewAnalyticsView() {
 
   const loggedUser = getLoggedUserFromLocalStorage();
 
+  const [loading, setLoading] = useState(true);
+  const [agreementCounter, setConveniosCounter] = useState<{ active: number; inactive: number }>({
+    active: 0,
+    inactive: 0,
+  });
+
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const responseAgreementCounter = await axios.get('http://localhost:3000/company/count');
+        console.log(responseAgreementCounter.status);
+
+        setConveniosCounter(responseAgreementCounter.data);
+      } catch (error) {
+        console.error('Failed to fetch convenios count:', error);
+      }
+
+      setLoading(false);
+    };
+
+    console.log(agreementCounter);
+
+    fetchHomeData();
+  }, [agreementCounter]);
+
   if (!loggedUser) {
     router.push('/sign-in');
     return null;
   }
-  return (
+  console.log(agreementCounter);
+
+  return loading ? (
+    <>Loading</>
+  ) : (
     <DashboardContent maxWidth="xl">
       <Typography variant="h3" sx={{ mb: { xs: 3, md: 5 } }}>
         Olá, {loggedUser.person.firstName} 👋
@@ -36,9 +70,9 @@ export function OverviewAnalyticsView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Weekly sales"
+            title="Total de pedidos esse mês"
             percent={2.6}
-            total={714000}
+            total={71}
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-bag.svg" />}
             chart={{
               categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
@@ -47,19 +81,21 @@ export function OverviewAnalyticsView() {
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={3}>
-          <AnalyticsWidgetSummary
-            title="New users"
-            percent={-0.1}
-            total={1352831}
-            color="secondary"
-            icon={<img alt="icon" src="/assets/icons/glass/ic-glass-users.svg" />}
-            chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [56, 47, 40, 62, 73, 30, 23, 54],
-            }}
-          />
-        </Grid>
+        {loggedUser.role.name === 'ADMIN' && (
+          <Grid xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary
+              title="Colaboradores"
+              percent={-0.1}
+              total={1352831}
+              color="secondary"
+              icon={<img alt="icon" src="/assets/icons/glass/ic-glass-users.svg" />}
+              chart={{
+                categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
+                series: [56, 47, 40, 62, 73, 30, 23, 54],
+              }}
+            />
+          </Grid>
+        )}
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
@@ -77,10 +113,10 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Messages"
+            title="Convênios"
             percent={3.6}
-            total={234}
-            color="error"
+            total={agreementCounter.active}
+            color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-message.svg" />}
             chart={{
               categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
@@ -91,13 +127,13 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsCurrentVisits
-            title="Current visits"
+            title="Meus 4 pratos mais pedidos"
             chart={{
               series: [
-                { label: 'America', value: 3500 },
-                { label: 'Asia', value: 2500 },
-                { label: 'Europe', value: 1500 },
-                { label: 'Africa', value: 500 },
+                { label: 'Iscas de frango empanadas', value: 3500 },
+                { label: 'Filezinho de frango', value: 2500 },
+                { label: 'Salada Caeser', value: 1500 },
+                { label: 'Iscas de carne', value: 500 },
               ],
             }}
           />
@@ -105,13 +141,13 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsWebsiteVisits
-            title="Website visits"
-            subheader="(+43%) than last year"
+            title="Minha frequência de pedidos"
+            subheader="(+43%) do que semana passada"
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+              categories: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
               series: [
-                { name: 'Team A', data: [43, 33, 22, 37, 67, 68, 37, 24, 55] },
-                { name: 'Team B', data: [51, 70, 47, 67, 40, 37, 24, 70, 24] },
+                { name: 'Semana Passada', data: [43, 33, 22, 37, 67, 68, 37] },
+                { name: 'Semana atual', data: [51, 70, 47, 67, 40, 37, 24] },
               ],
             }}
           />

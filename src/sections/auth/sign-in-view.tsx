@@ -15,7 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 
-import signIn from './helpers/signin';
+import { signIn } from './helpers/signin';
 
 // ----------------------------------------------------------------------
 
