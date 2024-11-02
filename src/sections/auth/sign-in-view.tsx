@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import { Alert } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -96,11 +97,9 @@ export function SignInView() {
         Login
       </LoadingButton>
       {error ?? (
-        <Box display="none" mt={2} width="100%">
-          <Typography variant="body2" color="error">
-            {error}
-          </Typography>
-        </Box>
+        <Alert severity="error" sx={{ display: 'none', borderRadius: 0 }}>
+          {error}
+        </Alert>
       )}
     </Box>
   );

@@ -7,8 +7,6 @@ export interface SignInProps {
 }
 
 export async function signIn({ identifier, password }: SignInProps): Promise<any> {
-  console.log('Singinin....');
-
   const responseSignIn = await axios.post('http://localhost:3000/auth/signin', {
     password,
     identifier,

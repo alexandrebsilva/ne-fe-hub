@@ -49,8 +49,9 @@ export function UserView() {
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}
+          href="/create-user"
         >
-          New user
+          Cadastrar novo usuário
         </Button>
       </Box>
 

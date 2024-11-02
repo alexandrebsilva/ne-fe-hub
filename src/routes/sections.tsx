@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import { Outlet, Navigate, useRoutes, useParams } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -7,6 +7,8 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { varAlpha } from 'src/theme/styles';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { UserDetailView } from 'src/sections/user/view';
+import { CreateUserView } from 'src/sections/user/view/create-user.view';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +47,7 @@ export function Router() {
       ),
       children: [
         { element: <HomePage />, index: true },
-        { path: 'employees', element: <UserPage /> },
+        { path: 'people', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'companies', element: <CompaniesPage /> },
         { path: 'blog', element: <BlogPage /> },
@@ -57,6 +59,23 @@ export function Router() {
         <AuthLayout>
           <SignInPage />
         </AuthLayout>
+      ),
+    },
+    {
+      path: 'person/:uuid',
+      element: (
+        <DashboardLayout>
+          <UserDetailView />
+        </DashboardLayout>
+      ),
+    },
+
+    {
+      path: 'create-user',
+      element: (
+        <DashboardLayout>
+          <CreateUserView />
+        </DashboardLayout>
       ),
     },
     {
