@@ -35,11 +35,24 @@ export function OverviewAnalyticsView() {
     inactive: 0,
   });
 
+  const [usersCounter, setUsersCounter] = useState<{ active: number; inactive: number }>({
+    active: 0,
+    inactive: 0,
+  });
+
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const responseAgreementCounter = await axios.get('http://localhost:3000/company/count');
-        console.log(responseAgreementCounter.status);
+        const axiosInstance = axios.create({
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        const responseAgreementCounter = await axiosInstance.get(
+          'http://localhost:3000/company/count'
+        );
+
+        const responseUsersCounter = await axiosInstance.get('http://localhost:3000/users/count');
+
+        setUsersCounter(responseUsersCounter.data);
 
         setConveniosCounter(responseAgreementCounter.data);
       } catch (error) {
@@ -86,7 +99,7 @@ export function OverviewAnalyticsView() {
             <AnalyticsWidgetSummary
               title="Colaboradores"
               percent={-0.1}
-              total={1352831}
+              total={usersCounter.active}
               color="secondary"
               icon={<img alt="icon" src="/assets/icons/glass/ic-glass-users.svg" />}
               chart={{

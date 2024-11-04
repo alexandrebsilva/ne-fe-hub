@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -37,7 +37,10 @@ export function CompaniesView() {
     const fetchCompanies = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/company');
+        const axiosInstance = axios.create({
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        const response = await axiosInstance.get('http://localhost:3000/company');
 
         setCompanies(response.data);
       } catch (error) {

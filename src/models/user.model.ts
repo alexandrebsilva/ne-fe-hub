@@ -22,7 +22,7 @@ export interface PersonProps {
   rgIssuingAgency?: string;
   rgIssueDate?: Date;
   placeOfBirth?: string;
-  nationality: string;
+  nationality?: string;
   maritalStatus?: string;
   fatherName?: string;
   motherName?: string;
@@ -44,8 +44,8 @@ export interface PersonProps {
   shoeSize?: string;
   race?: string;
   dependents?: Dependent[];
-  user: UserProps;
-  address: AddressProps;
+  user?: UserProps;
+  address?: AddressProps;
 }
 
 export interface Dependent {
@@ -61,6 +61,7 @@ export interface Dependent {
 }
 
 export interface CompanyProps {
+  uuid: string;
   name: string;
   legalName: string;
   document: string;
@@ -79,11 +80,13 @@ export enum ALLOWED_ROLE_NAMES {
   'ADMIN' = 'ADMIN',
 }
 export interface RoleProps {
+  uuid: string;
   name: ALLOWED_ROLE_NAMES;
   description: string | null;
 }
 
 export interface UserProps {
+  uuid: string;
   userId?: string;
   phone: string;
   username?: string;

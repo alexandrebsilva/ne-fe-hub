@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { UserProps } from 'src/models/user.model';
+import type { UserProps } from 'src/models/user.model';
 // ----------------------------------------------------------------------
 
 export function UserDetailView() {
@@ -48,7 +48,6 @@ export function UserDetailView() {
       </DashboardContent>
     );
   }
-  console.log('user', user);
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>

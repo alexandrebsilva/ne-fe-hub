@@ -1,6 +1,6 @@
-import type { UserProps } from './user-table-row';
-
 // ----------------------------------------------------------------------
+
+import { UserProps } from 'src/models/user.model';
 
 export const visuallyHidden = {
   border: 0,
@@ -71,7 +71,7 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (user) => user.person.firstName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 

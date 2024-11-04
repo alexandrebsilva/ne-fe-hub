@@ -1,4 +1,7 @@
-import { useState, useCallback } from 'react';
+import type { UserProps } from 'src/models/user.model';
+
+import axios, { Axios } from 'axios';
+import { useState, useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -22,8 +25,6 @@ import { TableNoData } from '../../common/table-no-data';
 import { UserTableToolbar } from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-import type { UserProps } from '../user-table-row';
-
 // ----------------------------------------------------------------------
 
 export function UserView() {
@@ -31,8 +32,34 @@ export function UserView() {
 
   const [filterName, setFilterName] = useState('');
 
+  const [loading, setLoading] = useState(true);
+
+  const [users, setUsers] = useState([] as UserProps[]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      setLoading(true);
+      try {
+        const axiosInstance = axios.create({
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        const response = await axiosInstance.get('http://localhost:3000/users');
+
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Failed to fetch companies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  console.log('users', users);
+
   const dataFiltered: UserProps[] = applyFilter({
-    inputData: _users,
+    inputData: users,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -81,7 +108,8 @@ export function UserView() {
                   )
                 }
                 headLabel={[
-                  { id: 'name', label: 'Name' },
+                  { id: 'name', label: 'Nome' },
+                  { id: 'name', label: 'Sobrenome' },
                   { id: 'company', label: 'Company' },
                   { id: 'role', label: 'Role' },
                   { id: 'isVerified', label: 'Verified', align: 'center' },
@@ -97,10 +125,10 @@ export function UserView() {
                   )
                   .map((row) => (
                     <UserTableRow
-                      key={row.id}
+                      key={row.uuid}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={table.selected.includes(row.uuid)}
+                      onSelectRow={() => table.onSelectRow(row.uuid)}
                     />
                   ))}
 

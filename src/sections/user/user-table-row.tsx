@@ -1,3 +1,5 @@
+import type { UserProps } from 'src/models/user.model';
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -10,20 +12,12 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
-
-export type UserProps = {
-  id: string;
-  name: string;
-  role: string;
-  status: string;
-  company: string;
-  avatarUrl: string;
-  isVerified: boolean;
-};
 
 type UserTableRowProps = {
   row: UserProps;
@@ -32,6 +26,7 @@ type UserTableRowProps = {
 };
 
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+  const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,27 +44,35 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
-        <TableCell component="th" scope="row">
+        <TableCell
+          component="th"
+          scope="row"
+          onClick={() => router.push(`/person/${row.uuid}`)}
+          sx={{ cursor: 'pointer' }}
+        >
           <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.name} src={row.avatarUrl} />
-            {row.name}
+            <Avatar alt={row.person.firstName} src="" />
+            {row.person.firstName}
           </Box>
         </TableCell>
 
-        <TableCell>{row.company}</TableCell>
+        <TableCell>{row.person.lastName}</TableCell>
+        <TableCell>{row.company.name}</TableCell>
 
-        <TableCell>{row.role}</TableCell>
+        <TableCell>{row.role.name}</TableCell>
 
         <TableCell align="center">
           {row.isVerified ? (
             <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
           ) : (
-            '-'
+            <Iconify width={22} icon="solar:close-circle-bold" sx={{ color: 'error.main' }} />
           )}
         </TableCell>
 
         <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
+          <Label color={row.isActive ? 'info' : 'error'}>
+            {row.isActive ? 'Ativo' : 'Inativo'}
+          </Label>
         </TableCell>
 
         <TableCell align="right">
